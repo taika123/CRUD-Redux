@@ -1,0 +1,19 @@
+.container {
+  ul {
+    display: flex;
+    align-items: center;
+    li {
+      list-style: none;
+      padding: 8px 16px;
+      a {
+        text-decoration: none;
+        color: black;
+      }
+    }
+  }
+  .btn-right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
