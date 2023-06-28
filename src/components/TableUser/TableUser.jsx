@@ -12,6 +12,7 @@ import {
   SortAscendingOutlined,
   SortDescendingOutlined,
 } from "@ant-design/icons";
+import Search from "antd/es/input/Search";
 
 function TableUser() {
   const [listUsers, setListUser] = useState([]);
@@ -27,6 +28,9 @@ function TableUser() {
   //state sort by user
   const [sortBy, setSortBy] = useState("asc");
   const [sortField, setSortField] = useState("id");
+
+  // search
+  const [search, setSearch] = useState("");
 
   const handleClose = () => {
     setIsShowModalEdit();
@@ -101,6 +105,21 @@ function TableUser() {
     getUsers(+event.selected + 1);
   };
 
+  //handle search field
+  const handleSeach = (e) => {
+    // setSearch(e.target.value);
+    console.log(e.target.value);
+    let term = e.target.value;
+    if (term) {
+      let cloneListUser = _.cloneDeep(listUsers);
+      cloneListUser = cloneListUser.filter((item) => item.email.includes(term));
+      setListUser(cloneListUser);
+      console.log(cloneListUser);
+    } else {
+      getUsers(1);
+    }
+  };
+
   //   console.log(listUsers, "listUsers");
   return (
     <>
@@ -115,6 +134,17 @@ function TableUser() {
           Create Users
         </button>
       </div>
+      <Search
+        placeholder="seach by email address..."
+        allowClear
+        // onSearch={onSearch}
+        // value={search}
+        onChange={(e) => handleSeach(e)}
+        style={{
+          width: 250,
+          marginBottom: 15,
+        }}
+      />
       <Table striped bordered hover>
         <thead>
           <tr>
