@@ -6,7 +6,7 @@ import ReactPaginate from "react-paginate";
 import "./TableUser.scss";
 import ModalAddNewUser from "../Modal/ModalCreateUser";
 import ModalEditUser from "../Modal/ModalEditUser";
-import _ from "lodash";
+import _, { debounce } from "lodash";
 import ModalDelete from "../Modal/ModalDelete";
 import {
   SortAscendingOutlined,
@@ -106,7 +106,7 @@ function TableUser() {
   };
 
   //handle search field
-  const handleSeach = (e) => {
+  const handleSeach = _.debounce((e) => {
     // setSearch(e.target.value);
     console.log(e.target.value);
     let term = e.target.value;
@@ -118,7 +118,7 @@ function TableUser() {
     } else {
       getUsers(1);
     }
-  };
+  }, 300);
 
   //   console.log(listUsers, "listUsers");
   return (
