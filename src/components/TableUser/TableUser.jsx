@@ -6,18 +6,28 @@ import ReactPaginate from "react-paginate";
 import "./TableUser.scss";
 import ModalAddNewUser from "../Modal/ModalCreateUser";
 import ModalEditUser from "../Modal/ModalEditUser";
-import _, { debounce } from "lodash";
+import _, { debounce, result } from "lodash";
 import ModalDelete from "../Modal/ModalDelete";
+import { CSVLink, CSVDownload } from "react-csv";
+import Papa from "papaparse";
+
 import {
   SortAscendingOutlined,
   SortDescendingOutlined,
+  PlusCircleOutlined,
+  DownloadOutlined,
+  ImportOutlined,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
+import { toast } from "react-toastify";
 
 function TableUser() {
   const [listUsers, setListUser] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totolPages, setTotolPages] = useState(0);
+
+  //dataexport
+  const [dataExport, setDataExport] = useState([]);
 
   const [show, setShow] = useState(false);
   const [isShowModalEdit, setIsShowModalEdit] = useState(false);
@@ -120,19 +130,117 @@ function TableUser() {
     }
   }, 300);
 
+  //handle export csv
+  const getUsersExport = (event, done) => {
+    let result = [];
+    if (listUsers && listUsers.length > 0) {
+      result.push(["Id", "Email", "First_name", "Last_name"]);
+      listUsers.map((item) => {
+        let arr = [];
+        (arr[0] = item.id),
+          (arr[1] = item.email),
+          (arr[2] = item.first_name),
+          (arr[3] = item.last_name);
+        result.push(arr);
+      });
+      setDataExport(result);
+      done();
+    }
+  };
+
+  //handle import csv
+  const handleImportCSV = (e) => {
+    // console.log(e);
+    let file = e.target.files[0];
+    if (file.type !== "text/csv") {
+      toast.error("Cannot import file csv because file maximum size");
+      return;
+    }
+
+    //parse local csv file
+    Papa.parse(file, {
+      // header: true,
+      complete: (result) => {
+        let rawCSV = result.data;
+        if (rawCSV.length > 0) {
+          if (rawCSV[0] && rawCSV[0].length === 4) {
+            if (
+              rawCSV[0][0] !== "id" ||
+              rawCSV[0][1] !== "email" ||
+              rawCSV[0][2] !== "first_name" ||
+              rawCSV[0][3] !== "last_name"
+            ) {
+              toast.error("Wrong data header import csv!!!");
+            } else {
+              let result = [];
+              // console.log(rawCSV);
+              rawCSV.map((item, i) => {
+                if (i > 0 && item.length === 4) {
+                  let obj = {};
+                  obj.id = item[0];
+                  obj.email = item[1];
+                  obj.first_name = item[2];
+                  obj.last_name = item[3];
+                  result.push(obj);
+                }
+              });
+              setListUser(result);
+              // console.log(result, "check result");
+            }
+          } else {
+            toast.error("Wrong Format import csv!!!");
+          }
+        } else {
+          toast.error("Not Found import csv!!!");
+        }
+        // console.log("rawCSV", rawCSV);
+        // console.log("finished", result.data);
+      },
+    });
+  };
+
   //   console.log(listUsers, "listUsers");
   return (
     <>
       <div className="my-3 btn-right">
         <span>List Users:</span>
-        <button
-          className="btn btn-success "
-          onClick={() => {
-            setShow(true);
-          }}
-        >
-          Create Users
-        </button>
+        <div className="group-btn">
+          <label htmlFor="import" className="btn btn-warning">
+            <ImportOutlined />
+            Import
+            <input type="file" className="file" hidden />
+            <input
+              type="file"
+              id="import"
+              hidden
+              onChange={(e) => handleImportCSV(e)}
+            />
+          </label>
+
+          {/* <button className="btn btn-warning">
+          
+          </button> */}
+          <CSVLink
+            filename={"users.csv"}
+            className="btn btn-primary"
+            target="_blank"
+            data={dataExport}
+            asyncOnClick={true}
+            onClick={(event, done) => getUsersExport(event, done)}
+          >
+            <DownloadOutlined />
+            Export
+          </CSVLink>
+          <button
+            className="btn btn-success"
+            onClick={() => {
+              setShow(true);
+            }}
+          >
+            <PlusCircleOutlined />
+            Create Users
+          </button>
+        </div>
       </div>
       <Search
         placeholder="seach by email address..."
