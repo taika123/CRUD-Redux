@@ -1,25 +1,29 @@
 import { Container } from "react-bootstrap";
 import "./App.scss";
 import Header from "./components/Header/Header";
-import TableUser from "./components/TableUser/TableUser";
 import { ToastContainer, toast } from "react-toastify";
-import Home from "./components/Home/Home";
-import { Route, Routes } from "react-router-dom";
-import Login from "./components/Auth/Login";
-import Logout from "./components/Auth/Logout";
-import Register from "./components/Auth/Register";
+
+import { useEffect } from "react";
+import AppRoutes from "./routes/AppRoutes";
+import { useDispatch, useSelector } from "react-redux";
+import { handleRefresh } from "./redux/actions/userAction";
+
 function App() {
+  const dataUser = useSelector((state) => state.user.account);
+  const dispatch = useDispatch();
+  console.log(dataUser, "dataUser");
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      dispatch(handleRefresh());
+    }
+  }, []);
+
   return (
     <>
       <Header />
       <Container>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/user" element={<TableUser />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/logout" element={<Logout />} />
-        </Routes>
+        <AppRoutes />
       </Container>
 
       <ToastContainer

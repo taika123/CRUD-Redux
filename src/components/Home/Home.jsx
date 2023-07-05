@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Comics } from "comics-api";
 function Home() {
   return (
     <div>

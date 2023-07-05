@@ -202,10 +202,13 @@ function TableUser() {
   //   console.log(listUsers, "listUsers");
   return (
     <>
-      <div className="my-3 btn-right">
-        <span>List Users:</span>
+      <div className=" my-3 btn-add d-sm-flex">
+        <span className="col-12 col-sm-2 ">List Users:</span>
         <div className="group-btn">
-          <label htmlFor="import" className="btn btn-warning">
+          <label
+            htmlFor="import"
+            className="btn btn-warning col-4 col-sm-4 col-md-4"
+          >
             <ImportOutlined />
             Import
             <input type="file" className="file" hidden />
@@ -222,7 +225,7 @@ function TableUser() {
           </button> */}
           <CSVLink
             filename={"users.csv"}
-            className="btn btn-primary"
+            className="btn btn-primary col-4 col-sm-4 col-md-4"
             target="_blank"
             data={dataExport}
             asyncOnClick={true}
@@ -232,7 +235,7 @@ function TableUser() {
             Export
           </CSVLink>
           <button
-            className="btn btn-success"
+            className="btn btn-success col-4 col-sm-4 col-md-4"
             onClick={() => {
               setShow(true);
             }}
@@ -249,73 +252,75 @@ function TableUser() {
         // value={search}
         onChange={(e) => handleSeach(e)}
         style={{
-          width: 250,
+          width: 300,
           marginBottom: 15,
         }}
       />
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>
-              <div className="css-sort">
-                <span>ID</span>
-                <span>
-                  <SortAscendingOutlined
-                    onClick={() => handleSort("desc", "id")}
-                  />
-                  <SortDescendingOutlined
-                    onClick={() => handleSort("asc", "id")}
-                  />
-                </span>
-              </div>
-            </th>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>
-              <div className="css-sort">
-                <span>Last Name</span>
-                <span>
-                  <SortAscendingOutlined
-                    onClick={() => handleSort("desc", "first_name")}
-                  />
-                  <SortDescendingOutlined
-                    onClick={() => handleSort("asc", "first_name")}
-                  />
-                </span>
-              </div>
-            </th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {listUsers &&
-            listUsers.length > 0 &&
-            listUsers.map((item, i) => {
-              return (
-                <tr key={i}>
-                  <td>{item.id}</td>
-                  <td>{item.email}</td>
-                  <td>{item.first_name}</td>
-                  <td>{item.last_name}</td>
-                  <td>
-                    <button
-                      className="btn btn-warning mx-2"
-                      onClick={() => handleEditUser(item)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDeleteUser(item)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </Table>
+      <div className="customize-table">
+        <Table striped bordered hover>
+          <thead>
+            <tr className="fixed-mobile">
+              <th>
+                <div className="css-sort">
+                  <span>ID</span>
+                  <span>
+                    <SortAscendingOutlined
+                      onClick={() => handleSort("desc", "id")}
+                    />
+                    <SortDescendingOutlined
+                      onClick={() => handleSort("asc", "id")}
+                    />
+                  </span>
+                </div>
+              </th>
+              <th>Email</th>
+              <th>First Name</th>
+              <th>
+                <div className="css-sort">
+                  <span>Last Name</span>
+                  <span>
+                    <SortAscendingOutlined
+                      onClick={() => handleSort("desc", "first_name")}
+                    />
+                    <SortDescendingOutlined
+                      onClick={() => handleSort("asc", "first_name")}
+                    />
+                  </span>
+                </div>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {listUsers &&
+              listUsers.length > 0 &&
+              listUsers.map((item, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{item.id}</td>
+                    <td>{item.email}</td>
+                    <td>{item.first_name}</td>
+                    <td>{item.last_name}</td>
+                    <td>
+                      <button
+                        className="btn btn-warning mx-2"
+                        onClick={() => handleEditUser(item)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger mt-1"
+                        onClick={() => handleDeleteUser(item)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </Table>
+      </div>
 
       <ReactPaginate
         breakLabel="..."

@@ -17,12 +17,28 @@
   }
   .group-btn {
     display: flex;
+    // justify-content: space-between;
     gap: 5px;
     .btn {
       display: flex;
       gap: 5px;
       justify-content: center;
       align-items: center;
+    }
+  }
+  .btn-add {
+    // display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .customize-table {
+    width: inherit;
+    overflow-x: auto;
+    .fixed-mobile {
+      // display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }
